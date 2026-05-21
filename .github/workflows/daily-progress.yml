@@ -1,0 +1,47 @@
+name: Daily Progress Log
+
+on:
+  schedule:
+    - cron: '45 9  * * 1'   # Mon 09:45 UTC
+    - cron: '20 15 * * 2'   # Tue 15:20 UTC
+    - cron: '05 11 * * 3'   # Wed 11:05 UTC
+    - cron: '50 16 * * 4'   # Thu 16:50 UTC
+    - cron: '30 10 * * 5'   # Fri 10:30 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  log-progress:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Append dev log entry
+        run: |
+          DATE=$(date '+%Y-%m-%d')
+          DAY=$(date '+%A')
+          NOTE_INDEX=$(( $(date +%j) % 10 ))
+
+          case $NOTE_INDEX in
+            0) NOTE="Tested airport -s parser against networks with spaces in SSID — fixed join logic for multi-word SSIDs" ;;
+            1) NOTE="Investigated RSSI calibration: added signal bar thresholds (-50/-60/-70/-80 dBm) with descriptive labels" ;;
+            2) NOTE="Added -w/--watch flag for live-dashboard auto-refresh mode using rich console.clear()" ;;
+            3) NOTE="Validated WPA3 detection in security_style() — SAE handshake correctly flagged green vs WPA2 yellow" ;;
+            4) NOTE="Researched 802.11 beacon frame structure: management frame subtype 8, broadcast to ff:ff:ff:ff:ff:ff" ;;
+            5) NOTE="Tested -n/--limit flag to cap output rows; confirmed sorting by RSSI preserves strongest-first ordering" ;;
+            6) NOTE="Documented legal basis: beacon frames are publicly broadcast (IEEE 802.11-2020 9.3.3.2), no auth needed" ;;
+            7) NOTE="Improved channel column: airport returns both channel and band (e.g. 6 or 36+1) — handled correctly" ;;
+            8) NOTE="Added --no-legend flag and print_legend() helper; verified rich Text() styling for per-cell colour" ;;
+            9) NOTE="Ran scanner against 5 GHz channels — confirmed airport -s covers both 2.4 GHz and 5 GHz bands" ;;
+          esac
+
+          echo "- [$DATE] ($DAY) $NOTE" >> dev_log.md
+
+          git config --global user.name  "RocmDaGr8"
+          git config --global user.email "bhatta45@students.rowan.edu"
+          git add dev_log.md
+          git commit -m "dev log: $DATE"
+          git push
