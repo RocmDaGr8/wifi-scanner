@@ -4,18 +4,22 @@ WiFi Network Scanner
 Author: Roshim Bhatta
 GitHub: github.com/RocmDaGr8
 
-Reads publicly broadcast 802.11 beacon frames using the macOS airport
-utility — the same data shown in your Mac's WiFi menu bar.
+Reads publicly broadcast 802.11 beacon frames on macOS using the CoreWLAN
+framework (via PyObjC) — the same data your Mac's WiFi menu reads.
 
 Displays per-network:
-  - SSID / BSSID
-  - RSSI (signal strength in dBm + visual bar)
-  - Channel
-  - Security type with color-coded risk label
+  - SSID (network name)
+  - BSSID (MAC address — requires Location permission, shown as N/A otherwise)
+  - RSSI signal strength in dBm with visual bar
+  - Channel number
+  - Security type with colour-coded risk label
 
-Legal note: Every access point continuously broadcasts these details
-as public beacon frames. Reading them requires no credentials and is
-equivalent to using your computer's built-in WiFi menu.
+Legal note: SSIDs, channels, RSSI, and security type are continuously
+broadcast by every access point as public 802.11 beacon frames. Reading
+them requires no association, no credentials, and no decryption.
+
+Requirements:
+  pip3 install rich pyobjc-framework-CoreWLAN
 
 Usage:
   python3 scanner.py             # one-shot scan
@@ -24,7 +28,6 @@ Usage:
   python3 scanner.py --no-legend # skip security legend
 """
 
-import subprocess
 import argparse
 import time
 import sys
@@ -35,83 +38,76 @@ from rich.table import Table
 from rich.text import Text
 from rich import box
 
-# --- macOS airport binary path ---
-AIRPORT = (
-    "/System/Library/PrivateFrameworks/Apple80211.framework"
-    "/Versions/Current/Resources/airport"
-)
+# --- CoreWLAN security constants (CWSecurity enum) ---
+# Maps integer security type to human-readable label
+_SECURITY_NAMES = {
+    0:  "OPEN",
+    1:  "WEP",
+    2:  "WPA Personal",
+    3:  "WPA Personal Mixed",
+    4:  "WPA2 Personal",
+    5:  "WPA2 Personal",
+    6:  "Dynamic WEP",
+    7:  "WPA Enterprise",
+    8:  "WPA Enterprise Mixed",
+    9:  "WPA2 Enterprise",
+    10: "WPA2 Enterprise",
+    11: "WPA3 Personal",
+    12: "WPA3 Enterprise",
+    13: "WPA3 Transition",
+    14: "OWE",
+    15: "OWE Transition",
+}
 
 console = Console()
 
 
 def run_scan():
     """
-    Run airport -s and return a list of network dicts sorted by RSSI.
-    Airport scans 2.4 GHz and 5 GHz channels and prints one line per
-    access point it hears a beacon frame from.
+    Scan for nearby WiFi networks using the CoreWLAN framework.
+
+    CoreWLAN is Apple's native WiFi framework. It passively collects beacon
+    frames broadcast by nearby access points — no credentials or association
+    required. Returns a deduplicated list sorted by RSSI (strongest first).
     """
     try:
-        result = subprocess.run(
-            [AIRPORT, "-s"],
-            capture_output=True,
-            text=True,
-            timeout=20,
-        )
-    except FileNotFoundError:
-        console.print("[bold red]Error:[/] airport utility not found.")
-        console.print(f"  Expected: {AIRPORT}")
-        console.print("  This tool is macOS-only.")
+        import CoreWLAN
+    except ImportError:
+        console.print("[bold red]Error:[/] CoreWLAN module not found.")
+        console.print("  Install with: [cyan]pip3 install pyobjc-framework-CoreWLAN[/]")
         sys.exit(1)
-    except subprocess.TimeoutExpired:
-        console.print("[bold yellow]Warning:[/] Scan timed out. Is WiFi enabled?")
+
+    iface = CoreWLAN.CWWiFiClient.sharedWiFiClient().interface()
+    if iface is None:
+        console.print("[bold yellow]Warning:[/] No WiFi interface found.")
         return []
 
-    lines = result.stdout.strip().split("\n")
-    if len(lines) < 2:
+    nets, error = iface.scanForNetworksWithName_error_(None, None)
+    if error:
+        console.print(f"[bold yellow]Scan warning:[/] {error}")
+    if not nets:
         return []
 
-    networks = []
-    for line in lines[1:]:
-        if not line.strip():
-            continue
-        net = _parse_line(line)
-        if net:
-            networks.append(net)
+    raw = []
+    for n in nets:
+        ch       = n.wlanChannel()
+        sec_int  = int(n.strongestSupportedSecurity())
+        sec_str  = _SECURITY_NAMES.get(sec_int, f"Unknown ({sec_int})")
+        raw.append({
+            "ssid":     n.ssid() or "<hidden>",
+            "bssid":    n.bssid() or "---",
+            "rssi":     int(n.rssiValue()),
+            "channel":  str(ch.channelNumber()) if ch else "?",
+            "security": sec_str,
+        })
 
-    networks.sort(key=lambda x: x["rssi"], reverse=True)
-    return networks
-
-
-def _parse_line(line):
-    """
-    Parse one output line from airport -s.
-    Locates BSSID (XX:XX:XX:XX:XX:XX) as anchor and works outward.
-    Columns: [SSID padded]  BSSID  RSSI  CHANNEL  HT  CC  SECURITY
-    """
-    parts = line.split()
-    if len(parts) < 5:
-        return None
-
-    bssid_idx = None
-    for i, part in enumerate(parts):
-        if len(part) == 17 and part.count(":") == 5:
-            bssid_idx = i
-            break
-
-    if bssid_idx is None:
-        return None
-
-    try:
-        ssid     = " ".join(parts[:bssid_idx]) or "<hidden>"
-        bssid    = parts[bssid_idx]
-        rssi     = int(parts[bssid_idx + 1])
-        channel  = parts[bssid_idx + 2]
-        security_parts = parts[bssid_idx + 5:]
-        security = " ".join(security_parts) if security_parts else "NONE"
-        return {"ssid": ssid, "bssid": bssid, "rssi": rssi,
-                "channel": channel, "security": security}
-    except (IndexError, ValueError):
-        return None
+    # Sort by RSSI, deduplicate on SSID (keep strongest)
+    raw.sort(key=lambda x: x["rssi"], reverse=True)
+    seen = {}
+    for net in raw:
+        if net["ssid"] not in seen:
+            seen[net["ssid"]] = net
+    return list(seen.values())
 
 
 def rssi_bar(rssi):
@@ -129,18 +125,22 @@ def rssi_bar(rssi):
 
 
 def security_style(security):
-    """Return (rich_color, label) based on security protocol."""
+    """Return (rich_colour, short_label) based on security string."""
     s = security.upper()
     if "WPA3" in s:
-        return "green",  "WPA3 [secure]"
+        return "green",  "WPA3"
     elif "WPA2" in s:
-        return "yellow", "WPA2 [ok]    "
+        return "yellow", "WPA2"
+    elif "OWE" in s:
+        return "yellow", "OWE"
     elif "WPA" in s:
-        return "red",    "WPA  [weak]  "
+        return "red",    "WPA"
     elif "WEP" in s:
-        return "red",    "WEP  [broken]"
+        return "red",    "WEP"
+    elif s in ("OPEN", "NONE"):
+        return "red",    "OPEN"
     else:
-        return "red",    "OPEN [none]  "
+        return "dim",    security[:8]
 
 
 def build_table(networks, limit=None):
@@ -157,13 +157,13 @@ def build_table(networks, limit=None):
         title_style="bold white",
         padding=(0, 1),
     )
-    table.add_column("#",        style="dim",        width=3,  justify="right")
-    table.add_column("SSID",     style="bold white", min_width=18)
-    table.add_column("BSSID",    style="dim white",  width=17)
-    table.add_column("Signal",   style="cyan",       width=10)
-    table.add_column("dBm",      style="cyan",       width=5,  justify="right")
-    table.add_column("Ch",       style="white",      width=4,  justify="center")
-    table.add_column("Security",                     width=16)
+    table.add_column("#",       style="dim",        width=3,  justify="right")
+    table.add_column("SSID",    style="bold white", min_width=20)
+    table.add_column("BSSID",   style="dim white",  width=17)
+    table.add_column("Signal",  style="cyan",       width=10)
+    table.add_column("dBm",     style="cyan",       width=5,  justify="right")
+    table.add_column("Ch",      style="white",      width=4,  justify="center")
+    table.add_column("Security",                    width=12)
 
     for i, net in enumerate(shown, 1):
         color, label = security_style(net["security"])
@@ -181,11 +181,14 @@ def build_table(networks, limit=None):
 
 def print_legend():
     """Print the security protocol colour legend."""
-    console.print("  [green]WPA3 [secure][/]  Modern standard — most secure")
-    console.print("  [yellow]WPA2 [ok]    [/]  Widely deployed — acceptable")
-    console.print("  [red]WPA  [weak]  [/]  Deprecated — avoid if possible")
-    console.print("  [red]WEP  [broken][/]  Broken encryption — trivially crackable")
-    console.print("  [red]OPEN [none]  [/]  No encryption — all traffic visible")
+    console.print("  [green]WPA3[/]  Modern standard — SAE handshake, most secure")
+    console.print("  [yellow]WPA2[/]  Widely deployed — acceptable with strong passphrase")
+    console.print("  [yellow]OWE [/]  Opportunistic encryption on open networks")
+    console.print("  [red]WPA [/]  Deprecated TKIP — practical attacks exist")
+    console.print("  [red]WEP [/]  Broken encryption — trivially crackable")
+    console.print("  [red]OPEN[/]  No encryption — all traffic visible")
+    console.print()
+    console.print("  [dim]BSSID shown as --- if macOS Location permission not granted[/]")
     console.print()
 
 
@@ -202,17 +205,17 @@ Examples:
         """,
     )
     parser.add_argument("-w", "--watch", type=int, default=0,
-                        help="Auto-refresh interval in seconds (0 = one shot)")
+                        help="Auto-refresh every N seconds (0 = one shot)")
     parser.add_argument("-n", "--limit", type=int, default=None,
-                        help="Show only the top N strongest networks")
+                        help="Show top N networks by signal strength")
     parser.add_argument("--no-legend", action="store_true",
-                        help="Skip the security protocol colour legend")
+                        help="Skip the security protocol legend")
     args = parser.parse_args()
 
     console.print()
     console.print("  [bold cyan]wifi-scanner[/]  |  github.com/RocmDaGr8")
     console.print("  [dim]─────────────────────────────────────────[/]")
-    console.print("  [dim]Reads publicly broadcast beacon frames[/]")
+    console.print("  [dim]Reads publicly broadcast beacon frames via CoreWLAN[/]")
     if args.watch:
         console.print(f"  [dim]Auto-refresh every {args.watch}s — Ctrl+C to stop[/]")
     console.print()
@@ -221,9 +224,8 @@ Examples:
     try:
         while True:
             networks = run_scan()
-
             if not networks:
-                console.print("[yellow]No networks found. Is WiFi turned on?[/]")
+                console.print("[yellow]No networks found. Is WiFi on?[/]")
             else:
                 if not first and args.watch:
                     console.clear()
