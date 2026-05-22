@@ -1,0 +1,1 @@
+- [2026-05-22] (Friday) Added -w/--watch flag for live-dashboard auto-refresh mode using rich console.clear()
