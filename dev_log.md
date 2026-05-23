@@ -1,1 +1,2 @@
 - [2026-05-22] (Friday) Added -w/--watch flag for live-dashboard auto-refresh mode using rich console.clear()
+- [2026-05-23] (Saturday) Validated WPA3 detection in security_style() — SAE handshake correctly flagged green vs WPA2 yellow
