@@ -2,3 +2,4 @@
 - [2026-05-23] (Saturday) Validated WPA3 detection in security_style() — SAE handshake correctly flagged green vs WPA2 yellow
 - [2026-05-25] (Monday) Tested -n/--limit flag to cap output rows; confirmed sorting by RSSI preserves strongest-first ordering
 - [2026-05-26] (Tuesday) Documented legal basis: beacon frames are publicly broadcast (IEEE 802.11-2020 9.3.3.2), no auth needed
+- [2026-05-27] (Wednesday) Improved channel column: airport returns both channel and band (e.g. 6 or 36+1) — handled correctly
