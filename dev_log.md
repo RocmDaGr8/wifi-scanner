@@ -5,3 +5,4 @@
 - [2026-05-27] (Wednesday) Improved channel column: airport returns both channel and band (e.g. 6 or 36+1) — handled correctly
 - [2026-05-28] (Thursday) Added --no-legend flag and print_legend() helper; verified rich Text() styling for per-cell colour
 - [2026-05-29] (Friday) Ran scanner against 5 GHz channels — confirmed airport -s covers both 2.4 GHz and 5 GHz bands
+- [2026-06-01] (Monday) Added -w/--watch flag for live-dashboard auto-refresh mode using rich console.clear()
