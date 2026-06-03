@@ -7,3 +7,4 @@
 - [2026-05-29] (Friday) Ran scanner against 5 GHz channels — confirmed airport -s covers both 2.4 GHz and 5 GHz bands
 - [2026-06-01] (Monday) Added -w/--watch flag for live-dashboard auto-refresh mode using rich console.clear()
 - [2026-06-02] (Tuesday) Validated WPA3 detection in security_style() — SAE handshake correctly flagged green vs WPA2 yellow
+- [2026-06-03] (Wednesday) Researched 802.11 beacon frame structure: management frame subtype 8, broadcast to ff:ff:ff:ff:ff:ff
