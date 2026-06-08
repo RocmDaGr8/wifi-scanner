@@ -10,3 +10,4 @@
 - [2026-06-03] (Wednesday) Researched 802.11 beacon frame structure: management frame subtype 8, broadcast to ff:ff:ff:ff:ff:ff
 - [2026-06-04] (Thursday) Tested -n/--limit flag to cap output rows; confirmed sorting by RSSI preserves strongest-first ordering
 - [2026-06-05] (Friday) Documented legal basis: beacon frames are publicly broadcast (IEEE 802.11-2020 9.3.3.2), no auth needed
+- [2026-06-08] (Monday) Ran scanner against 5 GHz channels — confirmed airport -s covers both 2.4 GHz and 5 GHz bands
