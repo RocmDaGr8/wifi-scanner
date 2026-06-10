@@ -12,3 +12,4 @@
 - [2026-06-05] (Friday) Documented legal basis: beacon frames are publicly broadcast (IEEE 802.11-2020 9.3.3.2), no auth needed
 - [2026-06-08] (Monday) Ran scanner against 5 GHz channels — confirmed airport -s covers both 2.4 GHz and 5 GHz bands
 - [2026-06-09] (Tuesday) Tested airport -s parser against networks with spaces in SSID — fixed join logic for multi-word SSIDs
+- [2026-06-10] (Wednesday) Investigated RSSI calibration: added signal bar thresholds (-50/-60/-70/-80 dBm) with descriptive labels
