@@ -14,3 +14,4 @@
 - [2026-06-09] (Tuesday) Tested airport -s parser against networks with spaces in SSID — fixed join logic for multi-word SSIDs
 - [2026-06-10] (Wednesday) Investigated RSSI calibration: added signal bar thresholds (-50/-60/-70/-80 dBm) with descriptive labels
 - [2026-06-11] (Thursday) Added -w/--watch flag for live-dashboard auto-refresh mode using rich console.clear()
+- [2026-06-12] (Friday) Validated WPA3 detection in security_style() — SAE handshake correctly flagged green vs WPA2 yellow
