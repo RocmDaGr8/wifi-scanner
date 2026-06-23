@@ -21,3 +21,4 @@
 - [2026-06-18] (Thursday) Ran scanner against 5 GHz channels — confirmed airport -s covers both 2.4 GHz and 5 GHz bands
 - [2026-06-19] (Friday) Tested airport -s parser against networks with spaces in SSID — fixed join logic for multi-word SSIDs
 - [2026-06-22] (Monday) Validated WPA3 detection in security_style() — SAE handshake correctly flagged green vs WPA2 yellow
+- [2026-06-23] (Tuesday) Researched 802.11 beacon frame structure: management frame subtype 8, broadcast to ff:ff:ff:ff:ff:ff
