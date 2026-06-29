@@ -25,3 +25,4 @@
 - [2026-06-24] (Wednesday) Tested -n/--limit flag to cap output rows; confirmed sorting by RSSI preserves strongest-first ordering
 - [2026-06-25] (Thursday) Documented legal basis: beacon frames are publicly broadcast (IEEE 802.11-2020 9.3.3.2), no auth needed
 - [2026-06-26] (Friday) Improved channel column: airport returns both channel and band (e.g. 6 or 36+1) — handled correctly
+- [2026-06-29] (Monday) Tested airport -s parser against networks with spaces in SSID — fixed join logic for multi-word SSIDs
