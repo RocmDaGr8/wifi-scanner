@@ -33,3 +33,4 @@
 - [2026-07-06] (Monday) Improved channel column: airport returns both channel and band (e.g. 6 or 36+1) — handled correctly
 - [2026-07-07] (Tuesday) Added --no-legend flag and print_legend() helper; verified rich Text() styling for per-cell colour
 - [2026-07-08] (Wednesday) Ran scanner against 5 GHz channels — confirmed airport -s covers both 2.4 GHz and 5 GHz bands
+- [2026-07-09] (Thursday) Tested airport -s parser against networks with spaces in SSID — fixed join logic for multi-word SSIDs
