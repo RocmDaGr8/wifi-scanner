@@ -35,3 +35,4 @@
 - [2026-07-08] (Wednesday) Ran scanner against 5 GHz channels — confirmed airport -s covers both 2.4 GHz and 5 GHz bands
 - [2026-07-09] (Thursday) Tested airport -s parser against networks with spaces in SSID — fixed join logic for multi-word SSIDs
 - [2026-07-10] (Friday) Investigated RSSI calibration: added signal bar thresholds (-50/-60/-70/-80 dBm) with descriptive labels
+- [2026-07-13] (Monday) Researched 802.11 beacon frame structure: management frame subtype 8, broadcast to ff:ff:ff:ff:ff:ff
