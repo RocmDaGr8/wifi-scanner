@@ -42,3 +42,4 @@
 - [2026-07-17] (Friday) Added --no-legend flag and print_legend() helper; verified rich Text() styling for per-cell colour
 - [2026-07-20] (Monday) Investigated RSSI calibration: added signal bar thresholds (-50/-60/-70/-80 dBm) with descriptive labels
 - [2026-07-21] (Tuesday) Added -w/--watch flag for live-dashboard auto-refresh mode using rich console.clear()
+- [2026-07-22] (Wednesday) Validated WPA3 detection in security_style() — SAE handshake correctly flagged green vs WPA2 yellow
