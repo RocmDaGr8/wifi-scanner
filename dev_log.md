@@ -51,3 +51,4 @@
 - [2026-07-30] (Thursday) Investigated RSSI calibration: added signal bar thresholds (-50/-60/-70/-80 dBm) with descriptive labels
 - [2026-07-31] (Friday) Added -w/--watch flag for live-dashboard auto-refresh mode using rich console.clear()
 - [2026-08-03] (Monday) Tested -n/--limit flag to cap output rows; confirmed sorting by RSSI preserves strongest-first ordering
+- [2026-08-04] (Tuesday) Documented legal basis: beacon frames are publicly broadcast (IEEE 802.11-2020 9.3.3.2), no auth needed
