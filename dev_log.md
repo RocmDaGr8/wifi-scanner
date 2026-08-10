@@ -54,3 +54,4 @@
 - [2026-08-04] (Tuesday) Documented legal basis: beacon frames are publicly broadcast (IEEE 802.11-2020 9.3.3.2), no auth needed
 - [2026-08-05] (Wednesday) Improved channel column: airport returns both channel and band (e.g. 6 or 36+1) — handled correctly
 - [2026-08-07] (Friday) Ran scanner against 5 GHz channels — confirmed airport -s covers both 2.4 GHz and 5 GHz bands
+- [2026-08-10] (Monday) Added -w/--watch flag for live-dashboard auto-refresh mode using rich console.clear()
