@@ -67,3 +67,4 @@
 - [2026-08-24] (Monday) Documented legal basis: beacon frames are publicly broadcast (IEEE 802.11-2020 9.3.3.2), no auth needed
 - [2026-08-25] (Tuesday) Improved channel column: airport returns both channel and band (e.g. 6 or 36+1) — handled correctly
 - [2026-08-26] (Wednesday) Added --no-legend flag and print_legend() helper; verified rich Text() styling for per-cell colour
+- [2026-08-28] (Friday) Tested airport -s parser against networks with spaces in SSID — fixed join logic for multi-word SSIDs
