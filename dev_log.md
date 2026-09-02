@@ -71,3 +71,4 @@
 - [2026-08-28] (Friday) Tested airport -s parser against networks with spaces in SSID — fixed join logic for multi-word SSIDs
 - [2026-08-31] (Monday) Validated WPA3 detection in security_style() — SAE handshake correctly flagged green vs WPA2 yellow
 - [2026-09-01] (Tuesday) Researched 802.11 beacon frame structure: management frame subtype 8, broadcast to ff:ff:ff:ff:ff:ff
+- [2026-09-02] (Wednesday) Tested -n/--limit flag to cap output rows; confirmed sorting by RSSI preserves strongest-first ordering
