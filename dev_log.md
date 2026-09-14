@@ -79,3 +79,4 @@
 - [2026-09-09] (Wednesday) Added -w/--watch flag for live-dashboard auto-refresh mode using rich console.clear()
 - [2026-09-10] (Thursday) Validated WPA3 detection in security_style() — SAE handshake correctly flagged green vs WPA2 yellow
 - [2026-09-11] (Friday) Researched 802.11 beacon frame structure: management frame subtype 8, broadcast to ff:ff:ff:ff:ff:ff
+- [2026-09-14] (Monday) Improved channel column: airport returns both channel and band (e.g. 6 or 36+1) — handled correctly
