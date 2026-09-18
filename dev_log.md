@@ -83,3 +83,4 @@
 - [2026-09-15] (Tuesday) Added --no-legend flag and print_legend() helper; verified rich Text() styling for per-cell colour
 - [2026-09-16] (Wednesday) Ran scanner against 5 GHz channels — confirmed airport -s covers both 2.4 GHz and 5 GHz bands
 - [2026-09-17] (Thursday) Tested airport -s parser against networks with spaces in SSID — fixed join logic for multi-word SSIDs
+- [2026-09-18] (Friday) Investigated RSSI calibration: added signal bar thresholds (-50/-60/-70/-80 dBm) with descriptive labels
