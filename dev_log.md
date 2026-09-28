@@ -89,3 +89,4 @@
 - [2026-09-23] (Wednesday) Documented legal basis: beacon frames are publicly broadcast (IEEE 802.11-2020 9.3.3.2), no auth needed
 - [2026-09-24] (Thursday) Improved channel column: airport returns both channel and band (e.g. 6 or 36+1) — handled correctly
 - [2026-09-25] (Friday) Added --no-legend flag and print_legend() helper; verified rich Text() styling for per-cell colour
+- [2026-09-28] (Monday) Investigated RSSI calibration: added signal bar thresholds (-50/-60/-70/-80 dBm) with descriptive labels
