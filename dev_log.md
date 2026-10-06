@@ -95,3 +95,4 @@
 - [2026-10-01] (Thursday) Researched 802.11 beacon frame structure: management frame subtype 8, broadcast to ff:ff:ff:ff:ff:ff
 - [2026-10-02] (Friday) Tested -n/--limit flag to cap output rows; confirmed sorting by RSSI preserves strongest-first ordering
 - [2026-10-05] (Monday) Added --no-legend flag and print_legend() helper; verified rich Text() styling for per-cell colour
+- [2026-10-06] (Tuesday) Ran scanner against 5 GHz channels — confirmed airport -s covers both 2.4 GHz and 5 GHz bands
