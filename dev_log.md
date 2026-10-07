@@ -96,3 +96,4 @@
 - [2026-10-02] (Friday) Tested -n/--limit flag to cap output rows; confirmed sorting by RSSI preserves strongest-first ordering
 - [2026-10-05] (Monday) Added --no-legend flag and print_legend() helper; verified rich Text() styling for per-cell colour
 - [2026-10-06] (Tuesday) Ran scanner against 5 GHz channels — confirmed airport -s covers both 2.4 GHz and 5 GHz bands
+- [2026-10-07] (Wednesday) Tested airport -s parser against networks with spaces in SSID — fixed join logic for multi-word SSIDs
