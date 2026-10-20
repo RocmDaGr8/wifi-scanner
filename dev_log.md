@@ -105,3 +105,4 @@
 - [2026-10-15] (Thursday) Added --no-legend flag and print_legend() helper; verified rich Text() styling for per-cell colour
 - [2026-10-16] (Friday) Ran scanner against 5 GHz channels — confirmed airport -s covers both 2.4 GHz and 5 GHz bands
 - [2026-10-19] (Monday) Added -w/--watch flag for live-dashboard auto-refresh mode using rich console.clear()
+- [2026-10-20] (Tuesday) Validated WPA3 detection in security_style() — SAE handshake correctly flagged green vs WPA2 yellow
