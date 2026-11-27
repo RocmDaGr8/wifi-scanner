@@ -132,3 +132,4 @@
 - [2026-11-23] (Monday) Improved channel column: airport returns both channel and band (e.g. 6 or 36+1) — handled correctly
 - [2026-11-24] (Tuesday) Added --no-legend flag and print_legend() helper; verified rich Text() styling for per-cell colour
 - [2026-11-25] (Wednesday) Ran scanner against 5 GHz channels — confirmed airport -s covers both 2.4 GHz and 5 GHz bands
+- [2026-11-27] (Friday) Investigated RSSI calibration: added signal bar thresholds (-50/-60/-70/-80 dBm) with descriptive labels
